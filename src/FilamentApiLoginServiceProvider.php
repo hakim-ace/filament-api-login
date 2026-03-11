@@ -18,15 +18,25 @@ class FilamentApiLoginServiceProvider extends ServiceProvider
     $this->mergeConfigFrom(__DIR__ . '/../config/filament-api-login.php', 'filament-api-login');
 
     $this->app->singleton(Services\ExternalAuthService::class, function ($app) {
+      $timeOut = config('filament-api-login.timeout', 30);
+      $apiUrl = config('filament-api-login.api_url');
       return new Services\ExternalAuthService(
-        apiUrl: config('filament-api-login.api_url'),
-        timeout: config('filament-api-login.timeout', 30)
+        apiUrl: $apiUrl,
+        timeout: intval($timeOut)
       );
     });
 
     // Register the plugin
     $this->app->singleton(FilamentApiLoginPlugin::class, function () {
-      return new FilamentApiLoginPlugin();
+      return new FilamentApiLoginPlugin([
+        'id' => 'filament-api-login',
+        'userMapping' => [
+          'id' => 'id',
+          'name' => 'name',
+          'email' => 'email',
+          'role' => 'role',
+        ],
+      ]);
     });
   }
 

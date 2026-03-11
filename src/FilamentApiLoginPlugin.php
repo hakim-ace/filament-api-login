@@ -18,7 +18,10 @@ class FilamentApiLoginPlugin implements Plugin
     'email' => 'email',
     'role' => 'role',
   ];
-
+  public function __construct(array $userMapping = [])
+  {
+    $this->userMapping = array_merge($this->userMapping, $userMapping);
+  }
   public function getId(): string
   {
     return 'filament-api-login';
