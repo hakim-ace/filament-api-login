@@ -1,8 +1,8 @@
 <?php
 
-namespace Kristiansnts\FilamentApiLogin\Tests;
+namespace Hakimace\FilamentApiLogin\Tests;
 
-use Kristiansnts\FilamentApiLogin\FilamentApiLoginServiceProvider;
+use Hakimace\FilamentApiLogin\FilamentApiLoginServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

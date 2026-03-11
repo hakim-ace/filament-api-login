@@ -1,9 +1,10 @@
 # Filament API Login
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/kristiansnts/filament-api-login.svg?style=flat-square)](https://packagist.org/packages/kristiansnts/filament-api-login)
-[![Total Downloads](https://img.shields.io/packagist/dt/kristiansnts/filament-api-login.svg?style=flat-square)](https://packagist.org/packages/kristiansnts/filament-api-login)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/hakimace/filament-api-login.svg?style=flat-square)](https://packagist.org/packages/hakimace/filament-api-login)
+[![Total Downloads](https://img.shields.io/packagist/dt/hakimace/filament-api-login.svg?style=flat-square)](https://packagist.org/packages/hakimace/filament-api-login)
 
 Token-based authentication for FilamentPHP that authenticates against external APIs without requiring local database users.
+based on [filament-api-login](https://github.com/kristiansnts/filament-api-login)
 
 ## Features
 
@@ -18,7 +19,7 @@ Token-based authentication for FilamentPHP that authenticates against external A
 You can install the package via Composer:
 
 ```bash
-composer require kristiansnts/filament-api-login
+composer require hakimace/filament-api-login
 ```
 
 Publish the configuration file:
@@ -57,16 +58,17 @@ Add the external guard to your `config/auth.php`:
 
 ### 3. Filament Panel Configuration
 
-Update your Filament Panel Provider to use the external authentication:
+Update your Filament Panel Provider to use the plugin:
 
 ```php
 <?php
 
 namespace App\Providers\Filament;
 
-use Kristiansnts\FilamentApiLogin\Pages\Auth\Login;
+use Hakimace\FilamentApiLogin\FilamentApiLoginPlugin;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -76,14 +78,29 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login(Login::class) // Use the package's login page
-            ->authGuard('external') // Use the external guard
+            ->plugin(FilamentApiLoginPlugin::make()) // Easy setup
             ->colors([
                 'primary' => Color::Amber,
             ])
             // ... rest of your configuration
     }
 }
+```
+
+### Advanced Usage
+
+You can customize the plugin configuration:
+
+```php
+->plugin(
+    FilamentApiLoginPlugin::make()
+        ->authGuard('external') // Default is 'external'
+        ->userMapping([
+            'id' => 'operator_id',   // API field for ID
+            'name' => 'display_name', // API field for Name
+            'email' => 'login_email', // API field for Email
+        ])
+)
 ```
 
 ## Usage
@@ -121,7 +138,7 @@ You can customize the API request by extending the `ExternalAuthService`:
 
 namespace App\Services;
 
-use Kristiansnts\FilamentApiLogin\Services\ExternalAuthService as BaseService;
+use Hakimace\FilamentApiLogin\Services\ExternalAuthService as BaseService;
 
 class CustomExternalAuthService extends BaseService
 {
@@ -142,12 +159,12 @@ class CustomExternalAuthService extends BaseService
         // Custom response handling
         if ($response->successful()) {
             $userData = $response->json();
-            
+
             if (isset($userData['token']) && isset($userData['data'])) {
                 return $userData;
             }
         }
-        
+
         return null;
     }
 }
@@ -157,7 +174,7 @@ Then bind your custom service in a service provider:
 
 ```php
 $this->app->bind(
-    \Kristiansnts\FilamentApiLogin\Services\ExternalAuthService::class,
+    \Hakimace\FilamentApiLogin\Services\ExternalAuthService::class,
     \App\Services\CustomExternalAuthService::class
 );
 ```
@@ -167,7 +184,7 @@ $this->app->bind(
 Override the `canAccessPanel` method in your panel configuration:
 
 ```php
-use Kristiansnts\FilamentApiLogin\Auth\SessionUser;
+use Hakimace\FilamentApiLogin\Auth\SessionUser;
 
 // In your Panel Provider
 ->authGuard('external')
@@ -233,7 +250,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [kristiansnts](https://github.com/kristiansnts)
+- [hakimace](https://github.com/hakimace)
 
 ## License
 

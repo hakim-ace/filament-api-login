@@ -1,9 +1,9 @@
 <?php
 
-namespace Kristiansnts\FilamentApiLogin\Tests\Unit;
+namespace Hakimace\FilamentApiLogin\Tests\Unit;
 
-use Kristiansnts\FilamentApiLogin\Auth\SessionUser;
-use Kristiansnts\FilamentApiLogin\Tests\TestCase;
+use Hakimace\FilamentApiLogin\Auth\SessionUser;
+use Hakimace\FilamentApiLogin\Tests\TestCase;
 use Filament\Panel;
 
 class SessionUserTest extends TestCase
